@@ -1,0 +1,152 @@
+# username neuroclass
+# home directory /home/neuroclass
+
+
+
+sudo apt install vim mc git cmake tmux openssh-server
+
+<snap>
+vlc
+vscode
+
+mkdir .virtualenv
+sudo apt install python3-pip
+pip3 --version
+pip3 install virtualenv
+pip3 install virtualenvwrapper
+
+
+
+vim .bashrc
+
+#Virtualenvwrapper settings:
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_VIRTUALENV=/home/neuroclass/.local/bin/virtualenv
+source ~/.local/bin/virtualenvwrapper.sh
+
+source ~/.bashrc
+
+pip install numpy matplotlib pandas seaborn tqdm 
+pip install pillow scipy scikit-learn scikit-image networkx
+pip install jupyter jupyterlab
+
+> for TF and PyTorch environments
+pip install Cython
+
+
+> CUDA
+https://towardsdatascience.com/installing-multiple-cuda-cudnn-versions-in-ubuntu-fcb6aa5194e2
+
+sudo lshw -C display
+
+# install default / recommended
+sudo ubuntu-drivers devices
+
+# To install recommended 
+sudo ubuntu-drivers autoinstall OR# To install specific distro
+sudo apt install nvidia-driver-[version number]
+
+nvidia-smi
+
+--- attach disk
+https://www.techrepublic.com/article/how-to-properly-automount-a-drive-in-ubuntu-linux/
+
+
+sudo mkdir /opt/data
+sudo chown -R neuroclass:neuroclass /opt/data
+
+sudo fdisk -l
+sudo blkid
+
+/dev/sda: UUID="7770df55-5f10-49da-b6be-b6bb94ac3ab7" TYPE="ext4"
+
+/etc/fstab
+UUID=7770df55-5f10-49da-b6be-b6bb94ac3ab7 /opt/data ext4 nosuid,nodev,nofail,x-gvfs-show 0 0
+
+
+
+--- docker
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-ru
+
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+sudo apt update
+apt-cache policy docker-ce
+sudo apt install docker-ce
+sudo systemctl status docker
+
+sudo usermod -aG docker ${USER}
+su - ${USER}
+id -nG
+
+docker run hello-world
+
+--- move docker images to the another place
+https://www.guguweb.com/2019/02/07/how-to-move-docker-data-directory-to-another-location-on-ubuntu/
+
+sudo service docker stop
+
+
+sudo vim /etc/docker/daemon.json
+
+{
+   "data-root": "/opt/data/docker"             
+}
+
+sudo rsync -aP /var/lib/docker/  /opt/data/docker
+
+sudo mv /var/lib/docker /var/lib/docker.old
+
+
+sudo service docker stop
+/
+# it must exists and start!
+
+sudo service docker start
+docker run hello-world
+
+
+--- install CUDA 
+
+
+# Add NVIDIA package repositories
+
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+sudo apt-get update
+
+
+wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
+sudo apt install ./nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
+sudo apt-get update
+
+apt-cache policy cuda
+
+# Install development and runtime libraries (~4GB)
+sudo apt-get install --no-install-recommends \
+    cuda-11-0 \
+    libcudnn8=8.0.5.39-1+cuda11.0  \
+    libcudnn8-dev=8.0.5.39-1+cuda11.0
+
+-- remote jupyter
+
+jupyter notebook --generate-config
+
+jupyter notebook password
+
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout ~/.keys/mykey.key -out ~/.keys/mycert.pem
+
+
+
+
+
+
+
+
+
