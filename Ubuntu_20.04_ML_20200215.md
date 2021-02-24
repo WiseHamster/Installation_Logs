@@ -42,7 +42,7 @@ source ~/.local/bin/virtualenvwrapper.sh
 ```
 
 ```
-source ~/.bashrc
+$ source ~/.bashrc
 ```
 
 ### Install standard Python packages into virtualenvs
@@ -55,7 +55,7 @@ $ pip install jupyter jupyterlab
 $ deactivate
 ```
 
-### For _tf_ and _torch_ enviromnents I nees Cython
+### For _tf_ and _torch_ enviromnents I need Cython
 
 ```
 $ mkvirtualenv tf
@@ -66,7 +66,8 @@ $ pip install Cython
 $ deactivate
 ```
 
-#### ... do the same for _torch_ environment
+#### ... do the same for the _torch_ virtual environment
+
 
 ### Setup jupyter for the remote access through HTTPS
 
@@ -77,26 +78,25 @@ $ jupyter notebook --generate-config
 $ jupyter notebook password
 $ mkdir ~/.keys
 $ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout ~/.keys/mykey.key -out ~/.keys/mycert.pem
-
-#### add following to the _~/.jupyter/jupyter_notebook_config.py_
-
-> # Set options for certfile, ip, password, and toggle off
-
-> # browser auto-opening
 ```
+#### add following lines to  _~/.jupyter/jupyter_notebook_config.py_
+
+```
+# Set options for certfile, ip, password, and toggle off
+
+# browser auto-opening
+
 c.NotebookApp.certfile = u'/home/neuroclass/.keys/mycert.pem'
 c.NotebookApp.keyfile = u'/home/neuroclass/.keys/mykey.key'
-```
 
-> # Set ip to '*' to bind on all interfaces (ips) for the public server
-```
+# Set ip to '*' to bind on all interfaces (ips) for the public server
 c.NotebookApp.ip = '*'
+
+# Copy hashed password from ~/.jupyter/jupyter_notebook_config.json
 c.NotebookApp.password = u'sha1:bcd259ccf...<your hashed password here>'
 c.NotebookApp.open_browser = False
-```
 
-> # It is a good idea to set a known, fixed port for server access
-```
+# It is a good idea to set a known, fixed port for server access
 c.NotebookApp.port = 9999
 ```
 ### Install Docker
@@ -120,26 +120,27 @@ id -nG`
 docker run hello-world
 ```
 
-#### (Specific for that PC) Attach data HDD
+#### (Specific for that PC) Attach HDD for data
 
 Full guide - [
 How to properly automount a drive in Ubuntu Linux
 ](https://www.techrepublic.com/article/how-to-properly-automount-a-drive-in-ubuntu-linux/)
 
-`$ sudo mkdir /opt/data`
-`$ sudo chown -R neuroclass:neuroclass /opt/data`
-
-`$ sudo fdisk -l`
-`$ sudo blkid`
 ```
+$ sudo mkdir /opt/data
+$ sudo chown -R neuroclass:neuroclass /opt/data
+
+$ sudo fdisk -l
+$ sudo blkid
+
 ...
 _/dev/sda: UUID="7770df55-5f10-49da-b6be-b6bb94ac3ab7" TYPE="ext4"_
 ...
-```
+
 `$ sudo echo "UUID=7770df55-5f10-49da-b6be-b6bb94ac3ab7 /opt/data ext4 nosuid,nodev,nofail,x-gvfs-show 0 0" >> /etc/fstab`
+```
 
-
-### Move docker images to the another place (HDD)
+### Move docker images to the another place (HDD) in my case
 
 Full guide - [How to move docker data directory to another location on Ubuntu](https://www.guguweb.com/2019/02/07/how-to-move-docker-data-directory-to-another-location-on-ubuntu/)
 
@@ -155,66 +156,96 @@ $ sudo rsync -aP /var/lib/docker/  /opt/data/docker
 
 $ sudo mv /var/lib/docker /var/lib/docker.old
 
-
-sudo service docker start
+$ sudo service docker start
 
 # for the test purpose
-docker run hello-world
-
+$ docker run hello-world
+```
 
 
 ### Install CUDA
 
-> CUDA
+#### Install nVidia driver
 
 https://towardsdatascience.com/installing-multiple-cuda-cudnn-versions-in-ubuntu-fcb6aa5194e2
 
-`sudo lshw -C display`
+```
+$ sudo lshw -C display
 
 # install default / recommended
-`$ sudo ubuntu-drivers devices`
+$ sudo ubuntu-drivers devices
 
 # To install recommended 
-`$ sudo ubuntu-drivers autoinstall OR# To install specific distro`
-`$ sudo apt install nvidia-driver-[version number]`
+$ sudo ubuntu-drivers autoinstall OR# To install specific distro
 
-`$ nvidia-smi`
+sudo apt install nvidia-driver-[version number]
+
+# in my case
+sudo apt install nvidia-driver-460
+
+$ nvidia-smi
+Wed Feb 24 23:06:08 2021       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 460.32.03    Driver Version: 460.32.03    CUDA Version: 11.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 107...  Off  | 00000000:03:00.0 Off |                  N/A |
+|  0%   31C    P8    10W / 180W |    113MiB /  8117MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce GTX 107...  Off  | 00000000:04:00.0 Off |                  N/A |
+| 33%   31C    P8     6W / 180W |     11MiB /  8119MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|    0   N/A  N/A      1140      G   /usr/lib/xorg/Xorg                 29MiB |
+|    0   N/A  N/A      1640      G   /usr/lib/xorg/Xorg                 54MiB |
+|    0   N/A  N/A      1767      G   /usr/bin/gnome-shell               10MiB |
+|    1   N/A  N/A      1140      G   /usr/lib/xorg/Xorg                  4MiB |
+|    1   N/A  N/A      1640      G   /usr/lib/xorg/Xorg                  4MiB |
++-----------------------------------------------------------------------------+
+```
+### Install nVidia CUDA 11.0
+
+#### Add NVIDIA package repositories
 
 ```
+$ wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+$ sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+$ sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+$ sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+$ sudo apt-get update
 
---- install CUDA 
+$ cd /tmp
+$ wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
+$ sudo apt install ./nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
+$ sudo apt-get update
 
-
-# Add NVIDIA package repositories
-
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-sudo apt-get update
-
-
-wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
-sudo apt install ./nvidia-machine-learning-repo-ubuntu2004_1.0.0-1_amd64.deb
-sudo apt-get update
-
-apt-cache policy cuda
-
-# Install development and runtime libraries (~4GB)
+$ apt-cache policy cuda
 ```
-sudo apt-get install --no-install-recommends \
+#### Install development and runtime libraries
+```
+$ sudo apt-get install --no-install-recommends \
     cuda-11-0 \
     libcudnn8=8.0.5.39-1+cuda11.0  \
     libcudnn8-dev=8.0.5.39-1+cuda11.0
 ```
 
+### Install Tensorflow into venv
 
+### Install Pytorch into venv
 
+#### Install and test Tensorflow docker image
 
+### Install CV2 with CUDA support
 
-
-
-
-
-
+### Install dlib with CUDA support
 
