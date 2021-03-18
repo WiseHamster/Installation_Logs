@@ -249,3 +249,30 @@ $ sudo apt-get install --no-install-recommends \
 
 ### Install dlib with CUDA support
 
+### Install R language support
+
+$ sudo apt install dirmngr gnupg apt-transport-https ca-certificates software-properties-common
+
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+$ sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+
+$ sudo apt install r-base
+
+$ R --version
+ version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under the terms of the
+GNU General Public License versions 2 or 3.
+For more information about these matters see
+http://www.gnu.org/licenses/.
+
+
+
+$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1106-amd64.deb
+$ sudo gdebi rstudio-server-1.4.1106-amd64.deb
+
+
