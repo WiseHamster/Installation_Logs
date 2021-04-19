@@ -245,6 +245,17 @@ $ sudo apt-get install --no-install-recommends \
 
 #### Install and test Tensorflow docker image
 
+```
+# Install latest stable release
+$ docker pull tensorflow/tensorflow                     
+
+# Verify your nvidia-docker installation:
+$ docker run --gpus all --rm nvidia/cuda nvidia-smi
+
+# Use the stable TensorFlow GPU image to start a bash shell session in the container:
+$ docker run --gpus all -it tensorflow/tensorflow bash
+```
+
 ### Install CV2 with CUDA support
 
 ### Install dlib with CUDA support
